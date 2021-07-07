@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "460816337731",
+    "project_id": "avashcoachingcenter",
+    "storage_bucket": "avashcoachingcenter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460816337731:android:3b246082812b0544c0fdf6",
+        "android_client_info": {
+          "package_name": "codercamp.com.avashcoachingcenter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "460816337731-9leq4adotmvt4ai3l6vuim5sh41hl5hq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-CBmHHtOsZ2KeyOaJS3BYstVuKj-Pxts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "460816337731-9leq4adotmvt4ai3l6vuim5sh41hl5hq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
