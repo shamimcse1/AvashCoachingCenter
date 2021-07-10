@@ -58,7 +58,7 @@ public class FacultyActivity extends AppCompatActivity {
         Physics();
         Chemistry();
         Biology();
-        HigerMath();
+        HigherMath();
         Accounting();
         progressDialog.show();
     }
@@ -312,7 +312,7 @@ public class FacultyActivity extends AppCompatActivity {
         });
     }
 
-    private void HigerMath() {
+    private void HigherMath() {
         DatabaseReference HigerMathReference = reference.child("Higher Mathematics");
 
         HigerMathReference.addValueEventListener(new ValueEventListener() {

@@ -1,17 +1,26 @@
 package codercamp.com.avashcoachingcenter.Model;
 
 public class TeachersDataModel {
-    private String name,email,post,imageUrl,key;
+    private String name,email,post,qualification, imageUrl,key;
 
     public TeachersDataModel() {
     }
 
-    public TeachersDataModel(String name, String email, String post, String imageUrl, String key) {
+    public TeachersDataModel(String name, String email, String post,String qualification, String imageUrl, String key) {
         this.name = name;
         this.email = email;
         this.post = post;
+        this.qualification=qualification;
         this.imageUrl = imageUrl;
         this.key = key;
+    }
+
+    public String getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(String qualification) {
+        this.qualification = qualification;
     }
 
     public String getName() {

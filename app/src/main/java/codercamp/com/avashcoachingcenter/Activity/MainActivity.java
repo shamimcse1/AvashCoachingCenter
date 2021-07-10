@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Slide;
 import android.view.View;
 
 import com.google.android.material.card.MaterialCardView;
@@ -14,7 +15,7 @@ import codercamp.com.avashcoachingcenter.Activity.Notice.NoticeActivity;
 import codercamp.com.avashcoachingcenter.R;
 
 public class MainActivity extends AppCompatActivity {
-    private MaterialCardView AddNotices, AddImages, AddBooks, UpdateFaculty, DeleteNotices;
+    private MaterialCardView AddNotices, AddImages, AddBooks, UpdateFaculty, DeleteNotices, Slider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         AddBooks = findViewById(R.id.AddEbook);
         UpdateFaculty = findViewById(R.id.UpdateFaculty);
         DeleteNotices = findViewById(R.id.Delete);
+        Slider = findViewById(R.id.AddSlide);
     }
 
     public void ClickListener() {
@@ -79,6 +81,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Slider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SliderActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+
 
     }
 

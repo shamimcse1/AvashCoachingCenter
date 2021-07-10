@@ -38,16 +38,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UpdateTeacherActivity extends AppCompatActivity {
     private CircleImageView updateImage;
-    private TextInputEditText name, email, post;
+    private TextInputEditText name, email, post, qualification;
     private MaterialButton UpdateBtn, DeleteBtn;
     private ProgressDialog progressDialog;
     private DatabaseReference reference;
-    private String Name, Email, Post, ImageUrl, key;
+    private String Name, Email, Post, ImageUrl, Qualification, key;
     private final int RequestCode = 2;
     private Bitmap bitmap;
     private StorageReference storageReference;
     private String category;
-    private String DownloadUrl = "";
+    public String DownloadUrl = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +60,7 @@ public class UpdateTeacherActivity extends AppCompatActivity {
         Email = getIntent().getStringExtra("email");
         Post = getIntent().getStringExtra("post");
         key = getIntent().getStringExtra("key");
+        Qualification = getIntent().getStringExtra("qualification");
         category = getIntent().getStringExtra("category");
         ImageUrl = getIntent().getStringExtra("imageUrl");
 
@@ -67,6 +68,7 @@ public class UpdateTeacherActivity extends AppCompatActivity {
         name.setText(Name);
         email.setText(Email);
         post.setText(Post);
+
         Glide.with(this).load(ImageUrl).into(updateImage);
 
 
@@ -109,6 +111,7 @@ public class UpdateTeacherActivity extends AppCompatActivity {
         name = findViewById(R.id.UpdateTeacherName);
         email = findViewById(R.id.UpdateTeacherEmail);
         post = findViewById(R.id.UpdateTeacherPost);
+        qualification = findViewById(R.id.UpdateTeacherQuali);
         UpdateBtn = findViewById(R.id.UpdateTeacherBtn);
         DeleteBtn = findViewById(R.id.DeleteTeacherBtn);
     }
@@ -144,14 +147,18 @@ public class UpdateTeacherActivity extends AppCompatActivity {
         Name = name.getText().toString();
         Email = email.getText().toString();
         Post = post.getText().toString();
+        Qualification = qualification.getText().toString();
         if (Name.isEmpty()) {
             name.setError("Please Enter Name");
             name.requestFocus();
         } else if (Email.isEmpty()) {
             name.setError("Please Enter Email");
             name.requestFocus();
-        } else if (Email.isEmpty()) {
+        } else if (Post.isEmpty()) {
             post.setError("Please Enter Post");
+            post.requestFocus();
+        } else if (Qualification.isEmpty()) {
+            post.setError("Please Enter Qualification");
             post.requestFocus();
         } else if (bitmap == null) {
             UploadData(ImageUrl);
@@ -219,6 +226,7 @@ public class UpdateTeacherActivity extends AppCompatActivity {
         map.put("name", Name);
         map.put("email", Email);
         map.put("post", Post);
+        map.put("qualification", Qualification);
         map.put("imageUrl", imageUrl);
 
         reference.child(category).child(key).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {

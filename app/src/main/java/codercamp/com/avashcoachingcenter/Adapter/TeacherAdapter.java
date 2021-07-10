@@ -48,6 +48,7 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.MyViewHo
         holder.name.setText(teachersDataModel.getName());
         holder.email.setText(teachersDataModel.getEmail());
         holder.post.setText(teachersDataModel.getPost());
+        holder.qualification.setText(teachersDataModel.getQualification());
 
         Glide.with(context).load(teachersDataModel.getImageUrl()).into(holder.imageView);
 
@@ -59,6 +60,7 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.MyViewHo
                 intent.putExtra("email", teachersDataModel.getEmail());
                 intent.putExtra("post", teachersDataModel.getPost());
                 intent.putExtra("key", teachersDataModel.getKey());
+                intent.putExtra("qualification", teachersDataModel.getQualification());
                 intent.putExtra("imageUrl", teachersDataModel.getImageUrl());
                 intent.putExtra("category", category);
                 context.startActivity(intent);
@@ -75,7 +77,7 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.MyViewHo
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         private CircleImageView imageView;
-        private TextView name, email, post;
+        private TextView name, email, post,qualification;
         private MaterialButton updateInfo;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -86,6 +88,7 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.MyViewHo
             name = itemView.findViewById(R.id.teacherName);
             email = itemView.findViewById(R.id.teacherEmail);
             post = itemView.findViewById(R.id.teacherPost);
+            qualification= itemView.findViewById(R.id.teacherQualification);
             updateInfo = itemView.findViewById(R.id.teacherUpdate);
 
         }

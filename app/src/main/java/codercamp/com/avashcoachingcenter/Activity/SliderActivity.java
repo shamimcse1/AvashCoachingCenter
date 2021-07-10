@@ -12,11 +12,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Gallery;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,67 +32,32 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 
-import codercamp.com.avashcoachingcenter.Activity.Faculty.AddTeacherActivity;
 import codercamp.com.avashcoachingcenter.Activity.Faculty.FacultyActivity;
-import codercamp.com.avashcoachingcenter.Activity.Faculty.UpdateTeacherActivity;
-import codercamp.com.avashcoachingcenter.Model.NoticeDataModel;
 import codercamp.com.avashcoachingcenter.R;
 
-public class GalleryActivity extends AppCompatActivity {
-
-    private Spinner imageCategory;
-    private MaterialCardView selectImage;
-    private ImageView GalleryPreview;
-    private MaterialButton UploadImage;
-    private final int RequestCode = 2;
-    private Bitmap bitmap;
-    private DatabaseReference reference;
-    private String DownloadUrl = "";
+public class SliderActivity extends AppCompatActivity {
+    private MaterialCardView AddImage;
+    private ImageView previewSlider;
+    private MaterialButton UploadSlider;
+    private TextInputEditText titleSlider;
+    private final int RequestCode = 1;
+    private DatabaseReference databaseReference;
+    private String DownloadUrl;
     private ProgressDialog progressDialog;
-    StorageReference storageReference;
-    private String category;
+    private StorageReference storageReference;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
+        setContentView(R.layout.activity_slider);
 
-
-        imageCategory = findViewById(R.id.imageCategory);
-        selectImage = findViewById(R.id.SelectImage);
-        GalleryPreview = findViewById(R.id.GalleryPreview);
-        UploadImage = findViewById(R.id.UploadImage);
-
-        //reference = FirebaseDatabase.getInstance().getReference().child("Gallery").child(category);
-        storageReference = FirebaseStorage.getInstance().getReference().child("Gallery");
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Please wait...");
-        progressDialog.setMessage("Loading.....");
-        progressDialog.setCancelable(false);
-
-
-        String[] CategoryList = new String[]{"Select Category", "Convocation", "Historical Day", "Other's Events"};
-        imageCategory.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, CategoryList));
-
-        imageCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                category = imageCategory.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        initView();
 
         //Select Image
-        selectImage.setOnClickListener(new View.OnClickListener() {
+        AddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 OpenGallery();
@@ -103,15 +65,15 @@ public class GalleryActivity extends AppCompatActivity {
         });
 
 
-        UploadImage.setOnClickListener(new View.OnClickListener() {
+        UploadSlider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (bitmap == null) {
-                    Toast.makeText(GalleryActivity.this, "Please Select an Image", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SliderActivity.this, "Please Select an Image", Toast.LENGTH_SHORT).show();
 
-                } else if (category.equals("Select Category")) {
-                    Toast.makeText(GalleryActivity.this, "Please Select an Category", Toast.LENGTH_SHORT).show();
-
+                } else if (titleSlider.getText().toString().isEmpty()) {
+                    titleSlider.setError("Please Enter Slider Name");
+                    titleSlider.requestFocus();
                 } else {
                     UploadImage();
                 }
@@ -119,6 +81,20 @@ public class GalleryActivity extends AppCompatActivity {
         });
     }
 
+    private void initView() {
+
+        titleSlider = findViewById(R.id.SliderTitle);
+        AddImage = findViewById(R.id.Add_Slider);
+        UploadSlider = findViewById(R.id.UploadSlider);
+        previewSlider = findViewById(R.id.previewSlider);
+
+        storageReference = FirebaseStorage.getInstance().getReference("Slider");
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Please wait...");
+        progressDialog.setMessage("Loading.....");
+        progressDialog.setCancelable(false);
+    }
 
     //Take a Image from the storage
     private void OpenGallery() {
@@ -137,14 +113,13 @@ public class GalleryActivity extends AppCompatActivity {
 
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    GalleryPreview.setImageBitmap(bitmap);
+                    previewSlider.setImageBitmap(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
-
 
     //UploadImage on Database
     private void UploadImage() {
@@ -173,7 +148,6 @@ public class GalleryActivity extends AppCompatActivity {
                                 public void onSuccess(Uri uri) {
 
                                     DownloadUrl = String.valueOf(uri);
-
                                     UploadData();
 
                                 }
@@ -183,7 +157,7 @@ public class GalleryActivity extends AppCompatActivity {
                 } else {
                     progressDialog.dismiss();
                     Log.d("tag", task.getException().getMessage());
-                    Toast.makeText(GalleryActivity.this, "Something went wrong" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SliderActivity.this, "Something went wrong" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -196,32 +170,32 @@ public class GalleryActivity extends AppCompatActivity {
         });
     }
 
+
     //Upload data on Database
     private void UploadData() {
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Slider");
+        final  String key = databaseReference.push().getKey().toString();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("title", titleSlider.getText().toString());
+        map.put("imageUrl", DownloadUrl);
 
-        reference = FirebaseDatabase.getInstance().getReference().child("Gallery").child(category);
-        final String key = reference.push().getKey();
-
-        assert key != null;
-        reference.child(key).setValue(DownloadUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
+        databaseReference.child(key).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onSuccess(Void aVoid) {
-                progressDialog.dismiss();
-                Toast.makeText(GalleryActivity.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(GalleryActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    progressDialog.dismiss();
+                    titleSlider.setText("");
+                    previewSlider.setImageResource(R.drawable.preview_logo);
+                    Toast.makeText(SliderActivity.this, "Slider Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(GalleryActivity.this, "Image Uploaded Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SliderActivity.this, "Slider Uploaded Failed", Toast.LENGTH_SHORT).show();
             }
         });
+
     }
-
-
 }

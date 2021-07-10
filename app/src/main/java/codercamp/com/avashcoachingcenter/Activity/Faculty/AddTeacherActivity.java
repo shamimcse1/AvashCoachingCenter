@@ -41,7 +41,7 @@ public class AddTeacherActivity extends AppCompatActivity {
 
     private Spinner TeacherCategory;
     private CircleImageView selectImage;
-    private TextInputEditText name, email, post;
+    private TextInputEditText name, email, post,qualification;
     private MaterialButton AddTeacherBtn;
     private final int RequestCode = 2;
     private Bitmap bitmap;
@@ -49,7 +49,7 @@ public class AddTeacherActivity extends AppCompatActivity {
     private DatabaseReference reference;
     private StorageReference storageReference;
     private String category;
-    private String Name, Email, Post, DownloadUrl = "";
+    private String Name, Email, Post,Qualification, DownloadUrl = "";
 
 
     @Override
@@ -96,6 +96,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         name = findViewById(R.id.TeacherName);
         email = findViewById(R.id.TeacherEmail);
         post = findViewById(R.id.TeacherPost);
+        qualification = findViewById(R.id.TeacherEduQualification);
         TeacherCategory = findViewById(R.id.TeacherCategory);
         AddTeacherBtn = findViewById(R.id.AddTeacherBtn);
 
@@ -142,6 +143,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         Name = name.getText().toString();
         Email = email.getText().toString();
         Post = post.getText().toString();
+        Qualification = qualification.getText().toString();
 
         if (Name.isEmpty()) {
             name.setError("Please Enter Name");
@@ -152,7 +154,11 @@ public class AddTeacherActivity extends AppCompatActivity {
         } else if (Post.isEmpty()) {
             post.setError("Please Enter Post");
             post.requestFocus();
-        } else if (category.equals("Select Category")) {
+        } else if (Qualification.isEmpty()) {
+            post.setError("Please Enter Qualification");
+            post.requestFocus();
+        }
+        else if (category.equals("Select Category")) {
             Toast.makeText(this, "Please Select Category", Toast.LENGTH_SHORT).show();
         } else if (bitmap == null) {
             UploadData();
@@ -218,7 +224,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         DatabaseReference dbRef = reference.child(category);
         final String key = dbRef.push().getKey();
 
-        TeachersDataModel model = new TeachersDataModel(Name, Email, Post, DownloadUrl, key);
+        TeachersDataModel model = new TeachersDataModel(Name, Email, Post,Qualification, DownloadUrl, key);
 
         assert key != null;
         dbRef.child(key).setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
